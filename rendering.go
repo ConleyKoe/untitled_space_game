@@ -11,11 +11,11 @@ func drawLine(screen *ebiten.Image, x1, y1, x2, y2 float64, clr color.Color) {
 	deltaX := math.Abs(x2 - x1)
 	deltaY := math.Abs(y2 - y1)
 
-	stepX := 1
+	stepX := 1 //direction the algo steps along the x axis
 	if x1 > x2 {
 		stepX = -1
 	} //if slope is negative, move left along x instead of right, otherwise stepX remains at 1 (right)
-	stepY := 1
+	stepY := 1 //direction the algo steps along the y axis
 	if y1 > y2 {
 		stepY = -1
 	} //if the line goes upwards, move up along y instead of down, otherwise stepY remains at 1 (down)
