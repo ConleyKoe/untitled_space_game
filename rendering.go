@@ -15,19 +15,21 @@ func drawLine(screen *ebiten.Image, x1, y1, x2, y2 float64, clr color.Color) {
 	if x1 > x2 {
 		stepX = -1
 	} //if slope is negative, move left along x instead of right, otherwise stepX remains at 1 (right)
-	stepY := -1
+	stepY := 1
 	if y1 > y2 {
 		stepY = -1
 	} //if the line goes upwards, move up along y instead of down, otherwise stepY remains at 1 (down)
 
 	err := deltaX - deltaY //initializes the error term as the delta of X minus the delta of Y, to be multiplied by 2 later
 
-	x0 := int(x1) // converts x1 to an integer so it can be used in our loop
-	y0 := int(y1) // this ^ but for y1
+	x0 := int(x1)   // converts x1 to an integer so it can be used in our loop
+	y0 := int(y1)   // this ^ but for y1
+	endX := int(x2) //literally the same...
+	endY := int(y2) //once again...
 	for {
 
-		screen.Set(x0, y0, clr)   //plots the first point of the line in the specified color
-		if x1 == x2 && y1 == y2 { //stops drawing the line once we've reached the endpoint
+		screen.Set(x0, y0, clr)       //plots the first point of the line in the specified color
+		if x0 == endX && y0 == endY { //stops drawing the line once we've reached the endpoint
 			break
 		}
 		err2 := 2 * err //properly sets up the error term for drawing

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"image/color"
 	"log"
 
@@ -10,15 +11,18 @@ import (
 type Game struct{}
 
 func (g *Game) Update() error {
+	fmt.Println("Game update rans")
 	return nil
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	drawLine(screen, 1, 1, 20, 20, color.White)
+	fmt.Println("Game draw running")
+	drawLine(screen, 100, 30, 200, 20, color.White)
+
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
-	return 320, 240
+	return 640, 480
 }
 
 func main() {
