@@ -46,3 +46,7 @@ func drawLine(screen *ebiten.Image, x1, y1, x2, y2 float64, clr color.Color) {
 
 	}
 }
+
+func ProjectPoint(v Vec3, fov, viewerDist float64, screenWidth, screenHeight int) {
+	scale := fov / (viewerDist - v.Z)
+}
