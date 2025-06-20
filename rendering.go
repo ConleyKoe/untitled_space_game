@@ -54,3 +54,9 @@ func ProjectPoint(v Vec3, focalLength, screenWidth, screenHeight float64) Vec2 {
 
 	return Vec2{x, y}
 }
+
+func RenderEdge(screen *ebiten.Image, a, b Vec3, clr color.Color) {
+	p1 := ProjectPoint(a, 100, 640, 480)
+	p2 := ProjectPoint(b, 100, 640, 480)
+	drawLine(screen, p1.X, p1.Y, p2.X, p2.Y, clr)
+}
