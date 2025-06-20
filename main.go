@@ -10,7 +10,7 @@ import (
 var TestMesh = Mesh{
 	Vertices: []Vec3{
 		{1, 1, 1}, {2, 1, 1}, {1, 2, 1}},
-	Faces: []Vec3{
+	Faces: []Face{
 		{0, 1, 2},
 	},
 	Edges: []Edge{
@@ -19,7 +19,7 @@ var TestMesh = Mesh{
 }
 
 var TestObject = MeshObject{
-	Mesh:     TestMesh,
+	Mesh:     &TestMesh,
 	Position: Vec3{1, 1, 1},
 }
 
