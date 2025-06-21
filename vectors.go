@@ -10,6 +10,10 @@ type Vec2 struct {
 	X, Y float64
 }
 
+type Vec2Int struct {
+	X, Y int
+}
+
 func (a *Vec3) Add(b Vec3) Vec3 { //Adds vector b to vector a, called like this: c := a.Add(b)
 	return Vec3{
 		X: a.X + b.X,
