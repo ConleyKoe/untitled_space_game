@@ -1,4 +1,4 @@
-module github.com/ConleyKoe/untitled_space_game
+module untitled_space_game
 
 go 1.24.4
 

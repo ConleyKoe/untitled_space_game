@@ -4,40 +4,43 @@ import (
 	"image/color"
 	"log"
 
+	"untitled_space_game/math3d"
+	"untitled_space_game/rendering"
+
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
-var TestMesh = Mesh{
-	Vertices: []Vec3{
-		{-2, -2, -2}, // 0
-		{2, -2, -2},  // 1
-		{2, 2, -2},   // 2
-		{-2, 2, -2},  // 3
-		{-2, -2, 2},  // 4
-		{2, -2, 2},   // 5
-		{2, 2, 2},    // 6
-		{-2, 2, 2},   // 7
+var TestMesh = rendering.Mesh{
+	Vertices: []math3d.Vec3{
+		{X: -2, Y: -2, Z: -2}, // 0
+		{X: 2, Y: -2, Z: -2},  // 1
+		{X: 2, Y: 2, Z: -2},   // 2
+		{X: -2, Y: 2, Z: -2},  // 3
+		{X: -2, Y: -2, Z: 2},  // 4
+		{X: 2, Y: -2, Z: 2},   // 5
+		{X: 2, Y: 2, Z: 2},    // 6
+		{X: -2, Y: 2, Z: 2},   // 7
 	},
-	Faces: []Face{
+	Faces: []rendering.Face{
 		// Front face (+Z)
-		{4, 5, 6}, {4, 6, 7},
+		{A: 4, B: 5, C: 6}, {A: 4, B: 6, C: 7},
 
 		// Back face (-Z)
-		{0, 2, 1}, {0, 3, 2},
+		{A: 0, B: 2, C: 1}, {A: 0, B: 3, C: 2},
 
 		// Right face (+X)
-		{1, 2, 6}, {1, 6, 5},
+		{A: 1, B: 2, C: 6}, {A: 1, B: 6, C: 5},
 
 		// Left face (-X)
-		{0, 7, 3}, {0, 4, 7},
+		{A: 0, B: 7, C: 3}, {A: 0, B: 4, C: 7},
 
 		// Top face (+Y)
-		{3, 7, 6}, {3, 6, 2},
+		{A: 3, B: 7, C: 6}, {A: 3, B: 6, C: 2},
 
 		// Bottom face (-Y)
-		{0, 1, 5}, {0, 5, 4},
+		{A: 0, B: 1, C: 5}, {A: 0, B: 5, C: 4},
 	},
-	Edges: []Edge{
+	Edges: []rendering.Edge{
 		//Front of mesh
 		{A: 4, B: 5, AdjacentFaces: [2]int{0, 11}}, {A: 5, B: 6, AdjacentFaces: [2]int{0, 5}},
 		{A: 4, B: 7, AdjacentFaces: [2]int{1, 7}}, {A: 6, B: 7, AdjacentFaces: [2]int{1, 8}},
@@ -51,9 +54,9 @@ var TestMesh = Mesh{
 	},
 }
 
-var TestObject = MeshObject{
+var TestObject = rendering.MeshObject{
 	Mesh:     &TestMesh,
-	Position: Vec3{0, 0, 4},
+	Position: math3d.Vec3{X: 0, Y: -6, Z: 10},
 }
 
 type Game struct {
