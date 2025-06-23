@@ -4,6 +4,7 @@ import (
 	"image/color"
 	"log"
 
+	"untitled_space_game/camera"
 	"untitled_space_game/math3d"
 	"untitled_space_game/rendering"
 
@@ -61,9 +62,11 @@ var TestObject = rendering.MeshObject{
 
 type Game struct {
 	focalLength float64
+	camera      camera.Camera
 }
 
 func (g *Game) Update() error {
+	g.camera.Update()
 	return nil
 }
 

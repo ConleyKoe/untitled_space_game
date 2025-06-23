@@ -2,32 +2,75 @@ package camera
 
 import (
 	"untitled_space_game/math3d"
-)
 
-type ViewMatrix [4][4]float64
+	"github.com/hajimehoshi/ebiten/v2"
+)
 
 type Camera struct {
 	Position math3d.Vec3
-	Forward  math3d.Vec3 //{0,0,-1}
-	Up       math3d.Vec3 //{0,1,0}
-	Right    math3d.Vec3 //{1,0,0}
+	Rotation math3d.Quaternion
 }
 
-func BuildViewMatrix(camera Camera) ViewMatrix {
-	f := camera.Forward.Normalize()
+func BuildViewMatrix(camera Camera) math3d.Mat4 { //builds a view matrix from the camera's rotation quaternion using some complicated formula
+	return camera.Rotation.ToMatrix().Transpose().Multiply(math3d.Translate(camera.Position.Scale(-1)))
+}
 
-	// Ensure right and up are orthogonal
-	r := f.CrossProduct(camera.Up)
-	r = r.Normalize()
-	u := r.CrossProduct(f)
-	u = u.Normalize() //still haven't fixed this but i don't know what's causing the problem
+// these functions calculate the camera's direction vectors from the rotation quaternion
+func (cam *Camera) Forward() math3d.Vec3 {
+	return cam.Rotation.RotateVector(math3d.Vec3{X: 0, Y: 0, Z: -1}).Normalize()
+}
 
-	p := camera.Position
+func (cam *Camera) Right() math3d.Vec3 {
+	return cam.Rotation.RotateVector(math3d.Vec3{X: 1, Y: 0, Z: 0}).Normalize()
+}
 
-	return ViewMatrix{
-		{r.X, r.Y, r.Z, -r.DotProduct(p)},
-		{u.X, u.Y, u.Z, -u.DotProduct(p)},
-		{-f.X, -f.Y, -f.Z, f.DotProduct(p)}, // Forward is inverted
-		{0, 0, 0, 1},
+func (cam *Camera) Up() math3d.Vec3 {
+	return cam.Rotation.RotateVector(math3d.Vec3{X: 0, Y: 1, Z: 0}).Normalize()
+}
+
+func (cam *Camera) handleMovement() {
+	moveSpeed := 0.1 // example speed
+
+	if ebiten.IsKeyPressed(ebiten.KeyW) {
+		cam.Position = cam.Position.Add(cam.Forward().Scale(moveSpeed))
 	}
+
+	if ebiten.IsKeyPressed(ebiten.KeyS) {
+		cam.Position = cam.Position.Add(cam.Forward().Scale(-moveSpeed))
+	}
+
+	if ebiten.IsKeyPressed(ebiten.KeyA) {
+		cam.Position = cam.Position.Add(cam.Right().Scale(-moveSpeed))
+	}
+
+	if ebiten.IsKeyPressed(ebiten.KeyD) {
+		cam.Position = cam.Position.Add(cam.Right().Scale(moveSpeed))
+	}
+}
+
+func (camera *Camera) handleRotation() {
+	rotationSpeed := 0.02
+
+	if ebiten.IsKeyPressed(ebiten.KeyLeft) {
+		delta := math3d.NewQuatFromAxisAngle(math3d.Vec3{X: 0, Y: 1, Z: 0}, rotationSpeed)
+		camera.Rotation = delta.Multiply(camera.Rotation).Normalize()
+	}
+	if ebiten.IsKeyPressed(ebiten.KeyRight) {
+		delta := math3d.NewQuatFromAxisAngle(math3d.Vec3{X: 0, Y: 1, Z: 0}, -rotationSpeed)
+		camera.Rotation = delta.Multiply(camera.Rotation).Normalize()
+	}
+	if ebiten.IsKeyPressed(ebiten.KeyUp) {
+		delta := math3d.NewQuatFromAxisAngle(math3d.Vec3{X: 1, Y: 0, Z: 0}, rotationSpeed)
+		camera.Rotation = delta.Multiply(camera.Rotation).Normalize()
+	}
+	if ebiten.IsKeyPressed(ebiten.KeyDown) {
+		delta := math3d.NewQuatFromAxisAngle(math3d.Vec3{X: 1, Y: 0, Z: 0}, -rotationSpeed)
+		camera.Rotation = delta.Multiply(camera.Rotation).Normalize()
+	}
+
+}
+
+func (camera *Camera) Update() {
+	camera.handleMovement()
+	camera.handleRotation()
 }
