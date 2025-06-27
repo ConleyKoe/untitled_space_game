@@ -67,7 +67,7 @@ var TestObject2 = rendering.MeshObject{
 	Rotation: math3d.Quaternion{W: 1, X: 0, Y: 0, Z: 0},
 }
 var GameCam = camera.Camera{
-	Position: math3d.Vec3{X: 0, Y: 0, Z: -2},
+	Position: math3d.Vec3{X: 0, Y: 0, Z: -5},
 	Rotation: math3d.Quaternion{W: 1, X: 0, Y: 0, Z: 0},
 }
 
@@ -89,7 +89,7 @@ func (g *Game) Update() error {
 func (g *Game) Draw(screen *ebiten.Image) {
 	screen.Fill(color.Black)
 	for _, i := range drawableObjects {
-		i.DrawMeshObject(screen, g.camera, color.White)
+		i.DrawMeshObjectFaces(screen, g.camera, color.White)
 	}
 
 }

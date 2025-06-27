@@ -1,6 +1,7 @@
 package rendering
 
 import (
+	"fmt"
 	"image/color"
 	"math"
 	"untitled_space_game/math3d"
@@ -79,4 +80,23 @@ func RenderEdge(screen *ebiten.Image, a, b math3d.Vec3, clr color.Color) {
 		return
 	}
 	DrawLine(screen, math.Round(p1.X), math.Round(p1.Y), math.Round(p2.X), math.Round(p2.Y), clr)
+}
+
+func RenderFace(screen *ebiten.Image, a, b, c math3d.Vec3, clr color.Color) {
+	if a.Z <= 0.1 || b.Z <= 0.1 || c.Z <= 0.1 { // Avoid near-zero Z or points behind camera
+		fmt.Println("Skipping face!")
+		return
+	}
+
+	a1 := ProjectPoint(a, 640, 480)
+	b1 := ProjectPoint(b, 640, 480)
+	c1 := ProjectPoint(c, 640, 480)
+
+	//fmt.Println("drawing line 1", a1, b1)
+	DrawLine(screen, math.Round(a1.X), math.Round(a1.Y), math.Round(b1.X), math.Round(b1.Y), clr)
+	//fmt.Println("drawing line 2", a1, c1)
+	DrawLine(screen, math.Round(a1.X), math.Round(a1.Y), math.Round(c1.X), math.Round(c1.Y), clr)
+	//fmt.Println("drawing line 3", b1, c1)
+	DrawLine(screen, math.Round(b1.X), math.Round(b1.Y), math.Round(c1.X), math.Round(c1.Y), clr)
+
 }

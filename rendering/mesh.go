@@ -77,3 +77,28 @@ func (Object *MeshObject) DrawMeshObject(screen *ebiten.Image, cam camera.Camera
 
 	}
 }
+
+func (Object *MeshObject) DrawMeshObjectFaces(screen *ebiten.Image, cam camera.Camera, clr color.Color) {
+	modelMatrix := math3d.BuildModelMatrix(Object.Position, Object.Rotation, math3d.Vec3{X: 1, Y: 1, Z: 1}) //creates the model matrix based on the attributes of the meshobject
+	viewMatrix := camera.BuildViewMatrix(cam)                                                               //creates the camera view matrix
+	projectionMatrix := math3d.BuildProjectionMatrix(80, 640/480, 0.01, 4000)                               //creates the projection matrix
+	MVP := projectionMatrix.Multiply(viewMatrix).Multiply(modelMatrix)                                      //combines all three
+
+	for _, i := range Object.Mesh.Faces {
+		transTri := [3]math3d.Vec3{
+			modelMatrix.MulVec4(Object.Mesh.Vertices[i.A].ToVec4(1)).ToVec3(),
+			modelMatrix.MulVec4(Object.Mesh.Vertices[i.B].ToVec4(1)).ToVec3(),
+			modelMatrix.MulVec4(Object.Mesh.Vertices[i.C].ToVec4(1)).ToVec3(),
+		}
+		if Object.Mesh.IsFaceVisible(transTri, cam.Position) {
+			drawTri := [3]math3d.Vec3{
+				MVP.MulVec4(Object.Mesh.Vertices[i.A].ToVec4(1)).PerspectiveDivide().ToVec3(),
+				MVP.MulVec4(Object.Mesh.Vertices[i.B].ToVec4(1)).PerspectiveDivide().ToVec3(),
+				MVP.MulVec4(Object.Mesh.Vertices[i.C].ToVec4(1)).PerspectiveDivide().ToVec3(),
+			}
+			//fmt.Println("drawing face", i)
+			RenderFace(screen, drawTri[0], drawTri[1], drawTri[2], clr)
+		}
+	}
+
+}
