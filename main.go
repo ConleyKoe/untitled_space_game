@@ -51,13 +51,29 @@ var TestMesh = rendering.Mesh{
 		//Right side of mesh
 		{A: 2, B: 6, AdjacentFaces: [2]int{4, 9}}, {A: 1, B: 5, AdjacentFaces: [2]int{5, 10}},
 		//Left side of mesh
-		{A: 3, B: 7, AdjacentFaces: [2]int{8, 9}}, {A: 0, B: 4, AdjacentFaces: [2]int{7, 11}},
+		{A: 3, B: 7, AdjacentFaces: [2]int{6, 8}}, {A: 0, B: 4, AdjacentFaces: [2]int{7, 11}},
 	},
 }
 
 var TestObject = rendering.MeshObject{
 	Mesh:     &TestMesh,
-	Position: math3d.Vec3{X: 0, Y: -6, Z: 10},
+	Position: math3d.Vec3{X: 0, Y: 0, Z: 8},
+	Rotation: math3d.Quaternion{W: 1, X: 0, Y: 0, Z: 0},
+}
+
+var TestObject2 = rendering.MeshObject{
+	Mesh:     &TestMesh,
+	Position: math3d.Vec3{X: 10, Y: 0, Z: 8},
+	Rotation: math3d.Quaternion{W: 1, X: 0, Y: 0, Z: 0},
+}
+var GameCam = camera.Camera{
+	Position: math3d.Vec3{X: 0, Y: 0, Z: -2},
+	Rotation: math3d.Quaternion{W: 1, X: 0, Y: 0, Z: 0},
+}
+
+var drawableObjects = []rendering.MeshObject{
+	TestObject,
+	TestObject2,
 }
 
 type Game struct {
@@ -72,7 +88,9 @@ func (g *Game) Update() error {
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	screen.Fill(color.Black)
-	TestObject.DrawMeshObject(screen, color.White)
+	for _, i := range drawableObjects {
+		i.DrawMeshObject(screen, g.camera, color.White)
+	}
 
 }
 
@@ -85,6 +103,7 @@ func main() {
 	ebiten.SetWindowTitle("")
 	if err := ebiten.RunGame(&Game{
 		focalLength: 100,
+		camera:      GameCam,
 	}); err != nil {
 		log.Fatal(err)
 	}

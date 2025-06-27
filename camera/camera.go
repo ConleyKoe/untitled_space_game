@@ -17,7 +17,7 @@ func BuildViewMatrix(camera Camera) math3d.Mat4 { //builds a view matrix from th
 
 // these functions calculate the camera's direction vectors from the rotation quaternion
 func (cam *Camera) Forward() math3d.Vec3 {
-	return cam.Rotation.RotateVector(math3d.Vec3{X: 0, Y: 0, Z: -1}).Normalize()
+	return cam.Rotation.RotateVector(math3d.Vec3{X: 0, Y: 0, Z: 1}).Normalize()
 }
 
 func (cam *Camera) Right() math3d.Vec3 {
@@ -40,11 +40,11 @@ func (cam *Camera) handleMovement() {
 	}
 
 	if ebiten.IsKeyPressed(ebiten.KeyA) {
-		cam.Position = cam.Position.Add(cam.Right().Scale(-moveSpeed))
+		cam.Position = cam.Position.Add(cam.Right().Scale(moveSpeed))
 	}
 
 	if ebiten.IsKeyPressed(ebiten.KeyD) {
-		cam.Position = cam.Position.Add(cam.Right().Scale(moveSpeed))
+		cam.Position = cam.Position.Add(cam.Right().Scale(-moveSpeed))
 	}
 }
 
@@ -52,19 +52,19 @@ func (camera *Camera) handleRotation() {
 	rotationSpeed := 0.02
 
 	if ebiten.IsKeyPressed(ebiten.KeyLeft) {
-		delta := math3d.NewQuatFromAxisAngle(math3d.Vec3{X: 0, Y: 1, Z: 0}, rotationSpeed)
+		delta := math3d.NewQuatFromAxisAngle(camera.Up(), rotationSpeed) //finds the quaternion to apply a rotation around the up vector
 		camera.Rotation = delta.Multiply(camera.Rotation).Normalize()
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyRight) {
-		delta := math3d.NewQuatFromAxisAngle(math3d.Vec3{X: 0, Y: 1, Z: 0}, -rotationSpeed)
+		delta := math3d.NewQuatFromAxisAngle(camera.Up(), -rotationSpeed) //opposite
 		camera.Rotation = delta.Multiply(camera.Rotation).Normalize()
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyUp) {
-		delta := math3d.NewQuatFromAxisAngle(math3d.Vec3{X: 1, Y: 0, Z: 0}, rotationSpeed)
+		delta := math3d.NewQuatFromAxisAngle(camera.Right(), rotationSpeed) //finds the quaternion to apply a rotations around the right vector
 		camera.Rotation = delta.Multiply(camera.Rotation).Normalize()
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyDown) {
-		delta := math3d.NewQuatFromAxisAngle(math3d.Vec3{X: 1, Y: 0, Z: 0}, -rotationSpeed)
+		delta := math3d.NewQuatFromAxisAngle(camera.Right(), -rotationSpeed) //opposite
 		camera.Rotation = delta.Multiply(camera.Rotation).Normalize()
 	}
 

@@ -39,7 +39,7 @@ func (a Mat4) Multiply(b Mat4) Mat4 { //multiplies matrix a by matrix b
 	return result
 }
 
-func BuildModelMatrix(position, scale Vec3, rotation Quaternion) Mat4 { //Builds a model matrix to transform an object from local space into world space
+func BuildModelMatrix(position Vec3, rotation Quaternion, scale Vec3) Mat4 {
 	return Translate(position).Multiply(rotation.ToMatrix()).Multiply(Scale(scale))
 }
 
@@ -53,7 +53,7 @@ func Scale(s Vec3) Mat4 {
 }
 
 func BuildProjectionMatrix(fov, aspect, near, far float64) Mat4 {
-	f := 1.0 / math.Tan(fov/2)
+	f := 1.0 / math.Tan(fov*math.Pi/180.0/2.0)
 
 	return Mat4{
 		{f / aspect, 0, 0, 0},

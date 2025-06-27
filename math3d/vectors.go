@@ -65,6 +65,14 @@ func (a *Vec3) CrossProduct(b Vec3) Vec3 { //Finds the cross product between the
 	}
 }
 
+func (a Vec3) ToVec4(w float64) Vec4 {
+	return Vec4{a.X, a.Y, a.Z, w}
+}
+
+func (v Vec4) ToVec3() Vec3 {
+	return Vec3{v.X, v.Y, v.Z}
+}
+
 // Add returns the component-wise addition of v and u.
 func (v Vec4) Add(u Vec4) Vec4 {
 	return Vec4{v.X + u.X, v.Y + u.Y, v.Z + u.Z, v.W + u.W}

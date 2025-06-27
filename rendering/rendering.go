@@ -56,10 +56,9 @@ func DrawLine(screen *ebiten.Image, x1, y1, x2, y2 float64, clr color.Color) {
 	}
 }
 
-func ProjectPoint(v math3d.Vec3, focalLength, screenWidth, screenHeight float64) math3d.Vec2 { //Projects 3d vector v to a 2d vector
-	scale := focalLength / v.Z
-	x := v.X*scale + screenWidth/2
-	y := v.Y*scale + screenHeight/2
+func ProjectPoint(v math3d.Vec3, screenWidth, screenHeight float64) math3d.Vec2 { //Projects 3d vector v to a 2d vector
+	x := (v.X + 1) * 0.5 * screenWidth
+	y := (1 - (v.Y+1)*0.5) * screenHeight //y is flipped
 
 	return math3d.Vec2{X: x, Y: y}
 }
@@ -69,8 +68,8 @@ func RenderEdge(screen *ebiten.Image, a, b math3d.Vec3, clr color.Color) {
 		return
 	}
 
-	p1 := ProjectPoint(a, 100, 640, 480)
-	p2 := ProjectPoint(b, 100, 640, 480)
+	p1 := ProjectPoint(a, 640, 480)
+	p2 := ProjectPoint(b, 640, 480)
 
 	// Sanity check: Don't draw if either point is NaN or infinite
 	if math.IsNaN(float64(p1.X)) || math.IsNaN(float64(p1.Y)) || math.IsNaN(float64(p2.X)) || math.IsNaN(float64(p2.Y)) {
